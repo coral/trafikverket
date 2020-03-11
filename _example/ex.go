@@ -29,7 +29,7 @@ func main() {
 		panic(err)
 	}
 
-	for _, k := range trann.RESPONSE.RESULT[0].TrainAnnouncement {
+	for _, k := range trann {
 
 		from, err := tf.LookupLocationSignature(k.FromLocation[0].LocationName)
 		if err != nil {

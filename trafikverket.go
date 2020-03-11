@@ -93,14 +93,14 @@ func (tf *TrafikVerket) initLocSignDb() error {
 	if err != nil {
 		return err
 	}
-	for _, station := range trs.RESPONSE.RESULT[0].TrainStation {
+	for _, station := range trs {
 		tf.locsigndb[station.LocationSignature] = station
 	}
 
 	return nil
 }
 
-func (tf *TrafikVerket) QueryTrainStations() (trainstation.Root, error) {
+func (tf *TrafikVerket) QueryTrainStations() ([]trainstation.TrainStation, error) {
 
 	rq := REQUEST{
 		Query: QUERY{
@@ -130,27 +130,27 @@ func (tf *TrafikVerket) QueryTrainStations() (trainstation.Root, error) {
 
 	b, err := ioutil.ReadAll(t.Body)
 	if err != nil {
-		return trainstation.Root{}, err
+		return nil, err
 	}
 
 	var tfr trainstation.Root
 
 	if err := json.NewDecoder(bytes.NewBuffer(b)).Decode(&tfr); err != nil {
-		return trainstation.Root{}, err
+		return nil, err
 	}
 
 	if len(tfr.RESPONSE.RESULT) > 0 {
 		err = tf.parseError(tfr.RESPONSE.RESULT[0].ERROR)
 		if err != nil {
-			return trainstation.Root{}, err
+			return nil, err
 		}
 	}
 
-	return tfr, nil
+	return tfr.RESPONSE.RESULT[0].TrainStation, nil
 
 }
 
-func (tf *TrafikVerket) QueryTrainAnnouncementsAtLocationSignature(LocationSignature string) (trainannouncement.Root, error) {
+func (tf *TrafikVerket) QueryTrainAnnouncementsAtLocationSignature(LocationSignature string) ([]trainannouncement.TrainAnnouncement, error) {
 
 	rq := REQUEST{
 		Query: QUERY{
@@ -212,21 +212,21 @@ func (tf *TrafikVerket) QueryTrainAnnouncementsAtLocationSignature(LocationSigna
 
 	b, err := ioutil.ReadAll(t.Body)
 	if err != nil {
-		return trainannouncement.Root{}, err
+		return nil, err
 	}
 
 	var tfr trainannouncement.Root
 
 	if err := json.NewDecoder(bytes.NewBuffer(b)).Decode(&tfr); err != nil {
-		return trainannouncement.Root{}, err
+		return nil, err
 	}
 
 	if len(tfr.RESPONSE.RESULT) > 0 {
 		err = tf.parseError(tfr.RESPONSE.RESULT[0].ERROR)
 		if err != nil {
-			return trainannouncement.Root{}, err
+			return nil, err
 		}
 	}
 
-	return tfr, nil
+	return tfr.RESPONSE.RESULT[0].TrainAnnouncement, nil
 }
