@@ -1,4 +1,4 @@
-package trainannouncment
+package trainannouncement
 
 import (
 	"time"

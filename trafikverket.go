@@ -9,7 +9,7 @@ import (
 	"net/http"
 
 	"github.com/coral/trafikverket/responses/apierror"
-	trainannouncment "github.com/coral/trafikverket/responses/trainannouncement"
+	"github.com/coral/trafikverket/responses/trainannouncement"
 	"github.com/coral/trafikverket/responses/trainstation"
 )
 
@@ -150,7 +150,7 @@ func (tf *TrafikVerket) QueryTrainStations() (trainstation.Root, error) {
 
 }
 
-func (tf *TrafikVerket) QueryTrainAnnouncementsAtLocationSignature(LocationSignature string) (trainannouncment.Root, error) {
+func (tf *TrafikVerket) QueryTrainAnnouncementsAtLocationSignature(LocationSignature string) (trainannouncement.Root, error) {
 
 	rq := REQUEST{
 		Query: QUERY{
@@ -212,19 +212,19 @@ func (tf *TrafikVerket) QueryTrainAnnouncementsAtLocationSignature(LocationSigna
 
 	b, err := ioutil.ReadAll(t.Body)
 	if err != nil {
-		return trainannouncment.Root{}, err
+		return trainannouncement.Root{}, err
 	}
 
-	var tfr trainannouncment.Root
+	var tfr trainannouncement.Root
 
 	if err := json.NewDecoder(bytes.NewBuffer(b)).Decode(&tfr); err != nil {
-		return trainannouncment.Root{}, err
+		return trainannouncement.Root{}, err
 	}
 
 	if len(tfr.RESPONSE.RESULT) > 0 {
 		err = tf.parseError(tfr.RESPONSE.RESULT[0].ERROR)
 		if err != nil {
-			return trainannouncment.Root{}, err
+			return trainannouncement.Root{}, err
 		}
 	}
 
