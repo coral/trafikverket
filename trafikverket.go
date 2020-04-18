@@ -181,7 +181,7 @@ func (tf *TrafikVerket) QueryTrainAnnouncementsAtLocationSignature(LocationSigna
 									EQ{
 										XMLName: xml.Name{Local: "LT"},
 										Name:    "AdvertisedTimeAtLocation",
-										Value:   "$dateadd(14:30:00)",
+										Value:   "$dateadd(23:30:00)",
 									},
 								},
 							},
